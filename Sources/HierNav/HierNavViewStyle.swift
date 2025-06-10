@@ -48,8 +48,8 @@ public enum HierNavViewStyle {
             switch self {
             case .single:
                 return 1
-            case .split2Columns(let options),
-                 .split3Columns(let options):
+            case .split2Columns(_),
+                 .split3Columns(_):
                 let cnt = viewWidth / minWidth
                 return min(Int(cnt), maxCount)
             }

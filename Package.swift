@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "HierNav",
     platforms: [
-        .macOS(.v11),
-        .iOS(.v12),
+        .macOS(.v14),
+        .iOS(.v17),
         .watchOS(.v10)
     ],
     products: [
