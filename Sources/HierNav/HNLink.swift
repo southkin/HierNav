@@ -6,32 +6,15 @@
 //
 import SwiftUI
 
-/// 계층 내비게이션을 위한 링크 컴포넌트
+
 public struct HNLink<Label: View, Destination: View>: View {
-    /// 액션 타입
     private let actionType: HNType
-    
-    /// 레이블 뷰 빌더
     private let label: () -> Label
-    
-    /// 목적지 뷰 빌더
     private let destination: () -> Destination
-    
-    /// 환경에서 HierNavModel을 가져옴
     @Environment(\.hierNavView) private var navModel
     @Environment(\.hierNavSection) private var section
-    
-    /// Present 상태 관리
     @State private var isPresentingModal = false
-    
-    /// Popover 상태 관리
     @State private var isPresentingPopover = false
-    
-    /// 초기화
-    /// - Parameters:
-    ///   - actionType: 수행할 액션 타입
-    ///   - label: 표시할 레이블
-    ///   - destination: 이동할 목적지 뷰
     public init(
         actionType: HNType,
         @ViewBuilder label: @escaping () -> Label,
@@ -49,13 +32,17 @@ public struct HNLink<Label: View, Destination: View>: View {
         .sheet(isPresented: $isPresentingModal) {
             destination()
         }
+        #if os(iOS) || os(macOS) || targetEnvironment(macCatalyst)
         .popover(isPresented: $isPresentingPopover) {
             destination()
         }
+        #endif
     }
-    
-    /// 액션 타입에 따른 동작 수행
     private func performAction() {
+#if os(watchOS)
+        pushView()
+        return
+#else
         switch actionType {
         case .push:
             pushView()
@@ -64,9 +51,8 @@ public struct HNLink<Label: View, Destination: View>: View {
         case .popover:
             showPopover()
         }
+#endif
     }
-    
-    /// 뷰를 푸시
     private func pushView() {
         guard let navModel = navModel else {
             print("Warning: HierNavModel not found in environment")
@@ -79,13 +65,9 @@ public struct HNLink<Label: View, Destination: View>: View {
             navModel.addView(view: destination().toAnyView)
         }
     }
-    
-    /// 뷰를 모달로 present
     private func presentView() {
         isPresentingModal = true
     }
-    
-    /// 뷰를 popover로 표시
     private func showPopover() {
         isPresentingPopover = true
     }
@@ -94,11 +76,6 @@ public struct HNLink<Label: View, Destination: View>: View {
 // MARK: - Convenience Initializers
 
 extension HNLink where Label == Text {
-    /// 텍스트 레이블을 사용하는 편의 초기화
-    /// - Parameters:
-    ///   - title: 레이블 텍스트
-    ///   - actionType: 수행할 액션 타입
-    ///   - destination: 이동할 목적지 뷰
     public init(
         _ title: String,
         actionType: HNType,
@@ -113,11 +90,6 @@ extension HNLink where Label == Text {
 }
 
 extension HNLink where Label == Image {
-    /// 이미지 레이블을 사용하는 편의 초기화
-    /// - Parameters:
-    ///   - systemName: SF Symbol 이름
-    ///   - actionType: 수행할 액션 타입
-    ///   - destination: 이동할 목적지 뷰
     public init(
         systemImage systemName: String,
         actionType: HNType,

@@ -12,6 +12,8 @@ public enum PlatformType {
     case iOS
     case tv
     case watch
+    case vision
+    case unknown
 
     public static var current: PlatformType {
         #if os(macOS)
@@ -22,8 +24,10 @@ public enum PlatformType {
         return .tv
         #elseif os(watchOS)
         return .watch
+        #elseif os(visionOS)
+        return .vision
         #else
-        return .mac // fallback
+        return .unknown
         #endif
     }
 }

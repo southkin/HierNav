@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import KinKit
 
 @MainActor
 public class HierNavModel: ObservableObject {
@@ -53,6 +52,22 @@ public class HierNavModel: ObservableObject {
     }
     func poppedView(cnt:Int = 1) {
         views.removeLast(cnt)
+    }
+    func popView(cnt:Int = 1) {
+        views.removeLast(cnt)
+        let content = views.last ?? EmptyView().toAnyView
+        let idx = min(views.count, currentColumnCount-1)
+        let viewStream = viewStreams[idx]
+        switch idx {
+        case currentColumnCount-1:
+            var newList = viewStream.value
+            newList.append(content)
+            viewStream.send(newList)
+            break
+        default:
+            viewStream.send([content])
+            break
+        }
     }
     func addView(view: AnyView, at index: Int) {
         guard index <= currentColumnCount else {

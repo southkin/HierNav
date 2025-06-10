@@ -24,7 +24,7 @@ public struct HierNavContainer: View {
     public var body: some View {
         switch mode {
         case .single:
-            model.views.first
+            model.views.last
         case .stack:
             NavigationStack(path: $model.path) {
                 let first = model.views.first
@@ -32,7 +32,7 @@ public struct HierNavContainer: View {
                     if index < model.views.count {
                         model.views[index]
                     } else {
-                        Text("❌ 잘못된 인덱스").toAnyView
+                        Text("❌").toAnyView
                     }
                 }
             }
