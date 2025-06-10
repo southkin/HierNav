@@ -1,71 +1,100 @@
 # HierNav
+A view that automatically configures NavigationSplitView or NavigationStack based on platform and layout conditions.
 
-> I don't know how 3-column navigation is supposed to work,  
-> so I just made one that *feels* like it does.
-
-HierNav is a SwiftUI-compatible navigation system that emulates multi-column hierarchical navigation across platforms — including iOS, macOS, and tvOS (sort of).  
-
-It supports up to **three columns**, handles **back gestures**, **section-based navigation**, and does its best to preserve environment values even when you throw `AnyView` into the mix (you shouldn't, but you will).
-
-## ✨ Features
-
-- 🔀 **Dynamic Column Handling**  
-  Automatically switches between 1–3 column layouts based on platform, screen size, and your desperate wishes.
-
-- 🧱 **Stack vs Single Mode**  
-  Each column can independently be a navigation stack or a single static view.
-
-- 🧩 **Composable Architecture**  
-  Uses `CurrentValueSubject<[AnyView], Never>` as navigation state stream per column — great for declarative + imperative hybrids.
-
-- 🚀 **HNLink Navigation**  
-  One component to rule them all: `HNLink` lets you push, present, or popover any destination view with minimal fuss.
-
-- 🍎 **Platform-aware**  
-  Takes into account `.horizontalSizeClass` and platform type (`iOS`, `macOS`, etc.) to decide layout.
-
-- 🤡 **Survives SplitView Weirdness**  
-  Handles the "weird invisible zone" where SwiftUI `NavigationSplitView` refuses to show up.
-
-## 📦 Example Usage
-
+## HierNav
 ```swift
-HierNavView(style: .split3Columns([
-    .mac(minWidth: 350),
-    .iOS(minWidth: 300)
-])) {
-    RootView()
-}
-
-### To navigate:
-```swift
-HNLink("Go deeper", actionType: .push) {
-    DetailView()
+HierNav(style: <#style#>) {
+    <#contents#> //your content
 }
 ```
-
-### Present modally:
+### style
 ```swift
-HNLink("Open modal", actionType: .present) {
-    ModalContent()
+case single
+case split2Columns(Set<PlatformOption>)
+case split3Columns(Set<PlatformOption>)
+```
+- .single
+  >Always uses a single stack view regardless of screen resolution
+- .split2columns
+  ```mermaid
+  flowchart TD
+  existsOptions{{"if let option = options.filter{$0 == Platform.current}"}}
+  checkWidth{{"option.minWidth*2 >= currentWidth"}}
+  if_iOS{{"Platform.current == .iOS"}}
+  widthIsCompact{{"UserInterfaceSizeClass == .compact"}}
+  two["2 column SplitView"]
+  one["fullSize StackView"]
+  existsOptions --false--> one
+  widthIsCompact --true--> one
+  checkWidth --false--> one
+  existsOptions --true--> if_iOS
+  if_iOS --true--> widthIsCompact
+  if_iOS --false--> checkWidth
+  widthIsCompact --false--> checkWidth
+  checkWidth --true--> two
+  ```
+- .split3columns
+  ```mermaid
+  flowchart TD
+  existsOptions{{"if let option = options.filter{$0 == Platform.current}"}}
+  checkWidth{{"option.minWidth*3 >= currentWidth"}}
+  checkWidthNext{{"option.minWidth*2 >= currentWidth"}}
+  if_iOS{{"Platform.current == .iOS"}}
+  widthIsCompact{{"UserInterfaceSizeClass == .compact"}}
+  three["3 column SplitView"]
+  two["2 column SplitView"]
+  one["fullSize StackView"]
+  existsOptions --false--> one
+  widthIsCompact --true--> one
+  checkWidth --false--> checkWidthNext
+  existsOptions --true--> if_iOS
+  if_iOS --true--> widthIsCompact
+  if_iOS --false--> checkWidth
+  widthIsCompact --false--> checkWidth
+  checkWidth --true----> three
+  checkWidthNext --true--> two
+  checkWidthNext --false--> one
+  ```
+
+#### PlatformOption
+```swift
+case mac(minWidth: Double)
+case iOS(minWidth: Double)
+```
+## HNLink
+```swift
+HNLink(
+    <#View#>, //visible View
+    actionType: <#HNType#>
+) {
+    <#Destination View#> //NextView
 }
 ```
+>HNLink must be inside HierNav
 
-### Popover (just don’t ask how it’s anchored):
+### View
+some View
+### HNType
 ```swift
-HNLink("Show Popover", actionType: .popover) {
-    PopoverContent()
-}
+case push
+case present
+case popover
 ```
-
-## 😩 Known Issues
-- 3-column layout may produce mild existential dread on small screens. This is normal.
-- Modal presentation style customization is not yet supported (because SwiftUI said no).
-- If you wrap too many views in AnyView, don’t be surprised when environment values disappear.
-
-## 🤷‍♂️ Why
-Because NavigationSplitView is too magical to be predictable,
-and NavigationStack alone feels like trying to dig a tunnel with a straw.
-
-## 📄 License
-MIT. Do what you want, but don’t blame me when it doesn’t work on watchOS.
+>watchOS : Always behaves as push regardless of the specified type
+### Convenience Initializers
+- _ title: String
+  ```swift
+  public init(
+      _ title: String,
+      actionType: HNType,
+      @ViewBuilder destination: @escaping () -> Destination
+  )
+  ```
+- systemImage systemName: String
+  ```swift
+  public init(
+      systemImage systemName: String,
+      actionType: HNType,
+      @ViewBuilder destination: @escaping () -> Destination
+  )
+  ```
