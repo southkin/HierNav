@@ -53,21 +53,26 @@ public struct HierNavView<Root: View>: View {
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
                     .environment(\.hierNavSection, 0)
+                    .id(UUID())
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[1])
                     .environment(\.hierNavSection, 1)
+                    .id(UUID())
             }
 
         case 3:
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
                     .environment(\.hierNavSection, 0)
+                    .id(UUID())
             } content: {
                 HierNavContainer(mode: .single, stream: model.viewStreams[1])
                     .environment(\.hierNavSection, 1)
+                    .id(UUID())
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[2])
                     .environment(\.hierNavSection, 2)
+                    .id(UUID())
             }
 
         default:
