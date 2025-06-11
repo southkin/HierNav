@@ -24,7 +24,7 @@ public struct HierNavContainer: View {
     public var body: some View {
         switch mode {
         case .single:
-            model.views.last
+            model.views.first
         case .stack:
             NavigationStack(path: $model.path) {
                 let first = model.views.first
