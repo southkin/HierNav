@@ -27,8 +27,6 @@ public struct HierNavView<Root: View>: View {
             contentView(for: geometry.size)
         }
         .environment(\.hierNavView, model)
-        .onAppear {
-        }
     }
     @ViewBuilder
     private func contentView(for size: CGSize) -> some View {
@@ -45,7 +43,6 @@ public struct HierNavView<Root: View>: View {
     @ViewBuilder
     private func singleColumnLayout() -> some View {
         HierNavContainer(mode: .stack, stream: model.viewStreams[0])
-            .environment(\.hierNavView, model)
             .environment(\.hierNavSection, 0)
             .id(UUID())
     }
@@ -55,30 +52,23 @@ public struct HierNavView<Root: View>: View {
         case 2:
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
-                    .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 0)
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[1])
-                    .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 1)
             }
-            .id(UUID())
 
         case 3:
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
-                    .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 0)
             } content: {
                 HierNavContainer(mode: .single, stream: model.viewStreams[1])
-                    .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 1)
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[2])
-                    .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 2)
             }
-            .id(UUID())
 
         default:
             EmptyView()
