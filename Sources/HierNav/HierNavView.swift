@@ -57,31 +57,28 @@ public struct HierNavView<Root: View>: View {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
                     .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 0)
-                    .id(UUID())
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[1])
                     .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 1)
-                    .id(UUID())
             }
+            .id(UUID())
 
         case 3:
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
                     .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 0)
-                    .id(UUID())
             } content: {
                 HierNavContainer(mode: .single, stream: model.viewStreams[1])
                     .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 1)
-                    .id(UUID())
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[2])
                     .environment(\.hierNavView, model)
                     .environment(\.hierNavSection, 2)
-                    .id(UUID())
             }
+            .id(UUID())
 
         default:
             EmptyView()
