@@ -38,8 +38,9 @@ public struct HierNavContainer: View {
                 }
             }
             .onChange(of: model.path) {
-                guard model.isPushed == false else {
+                guard model.isPushed == false, navModel?.updatedColumnCount != true else {
                     model.isPushed = false
+                    navModel?.updatedColumnCount = false
                     return
                 }
                 let cnt = model.views.count - 1 - model.path.count

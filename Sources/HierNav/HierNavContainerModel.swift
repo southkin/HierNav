@@ -16,6 +16,7 @@ class HierNavContainerModel: ObservableObject {
     @Published var views: [AnyView] = []
     @Published var path = NavigationPath()
     var isPushed: Bool = false
+    var isColChanged: Bool = false
     init(stream: CurrentValueSubject<[AnyView], Never>) {
         self.stream = stream
         self.stream.sink { [weak self] new in

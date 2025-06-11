@@ -34,7 +34,7 @@ public struct HierNavView<Root: View>: View {
     private func contentView(for size: CGSize) -> some View {
         let _ = model.updateViewWidth(size.width, sizeClass: horizontalSizeClass)
         let columnCount = model.currentColumnCount
-        
+        guard model.currentColumnCount != columnCount
         if columnCount == 1 {
             // 단일 컬럼 레이아웃
             singleColumnLayout()

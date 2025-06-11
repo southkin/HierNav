@@ -12,6 +12,7 @@ import Combine
 public class HierNavModel: ObservableObject {
     var style: HierNavViewStyle
     var viewWidth: CGFloat = 0
+    var updatedColumnCount: Bool = false
     @Published var currentColumnCount: Int = 0
     var views: [AnyView]
     @Published var viewStreams: [CurrentValueSubject<[AnyView], Never>] = .init()
@@ -39,6 +40,7 @@ public class HierNavModel: ObservableObject {
                 cnt = max(1, min(Int(self.viewWidth / self.style.minWidth), self.style.maxCount))
             }
             guard cnt != self.currentColumnCount else { return }
+            updatedColumnCount = true
             self.viewStreams = (0..<cnt).map { _ in CurrentValueSubject<[AnyView], Never>([]) }
             for i in 0..<cnt {
                 guard self.views.count == i+1 else {
