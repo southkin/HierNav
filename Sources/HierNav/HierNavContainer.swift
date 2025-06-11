@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 public struct HierNavContainer: View {
+    
     enum Mode { case single, stack }
     
     let mode: Mode
