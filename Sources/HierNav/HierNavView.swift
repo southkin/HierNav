@@ -44,7 +44,7 @@ public struct HierNavView<Root: View>: View {
     private func singleColumnLayout() -> some View {
         HierNavContainer(mode: .stack, stream: model.viewStreams[0])
             .environment(\.hierNavSection, 0)
-            .id(UUID())
+            .id(0)
     }
     @ViewBuilder
     private func multiColumnLayout(columnCount: Int) -> some View {
@@ -53,26 +53,26 @@ public struct HierNavView<Root: View>: View {
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
                     .environment(\.hierNavSection, 0)
-                    .id(UUID())
+                    .id(0)
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[1])
                     .environment(\.hierNavSection, 1)
-                    .id(UUID())
+                    .id(1)
             }
 
         case 3:
             NavigationSplitView {
                 HierNavContainer(mode: .single, stream: model.viewStreams[0])
                     .environment(\.hierNavSection, 0)
-                    .id(UUID())
+                    .id(0)
             } content: {
                 HierNavContainer(mode: .single, stream: model.viewStreams[1])
                     .environment(\.hierNavSection, 1)
-                    .id(UUID())
+                    .id(1)
             } detail: {
                 HierNavContainer(mode: .stack, stream: model.viewStreams[2])
                     .environment(\.hierNavSection, 2)
-                    .id(UUID())
+                    .id(2)
             }
 
         default:
