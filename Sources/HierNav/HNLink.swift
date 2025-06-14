@@ -18,7 +18,7 @@ public struct HNLink<Label: View, Destination: View>: View {
     public init(
         actionType: HNType,
         @ViewBuilder label: @escaping () -> Label,
-        @ViewBuilder destination: @escaping () -> Destination
+        @ViewBuilder destination: @escaping () -> Destination = {EmptyView()}
     ) {
         self.actionType = actionType
         self.label = label
@@ -50,6 +50,8 @@ public struct HNLink<Label: View, Destination: View>: View {
             presentView()
         case .popover:
             showPopover()
+        case .justRun(let fnc):
+            fnc()
         }
 #endif
     }
@@ -79,7 +81,7 @@ extension HNLink where Label == Text {
     public init(
         _ title: String,
         actionType: HNType,
-        @ViewBuilder destination: @escaping () -> Destination
+        @ViewBuilder destination: @escaping () -> Destination = {EmptyView()}
     ) {
         self.init(
             actionType: actionType,
@@ -93,7 +95,7 @@ extension HNLink where Label == Image {
     public init(
         systemImage systemName: String,
         actionType: HNType,
-        @ViewBuilder destination: @escaping () -> Destination
+        @ViewBuilder destination: @escaping () -> Destination = {EmptyView()}
     ) {
         self.init(
             actionType: actionType,

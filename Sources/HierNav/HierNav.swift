@@ -16,9 +16,9 @@ public typealias HierNav = HierNavView
                 HNLink("test", actionType: .push) {
                     HNLink("test", actionType: .popover)
                     {
-                        HNLink("test", actionType: .popover) {
-                            Text("last")
-                        }
+                        HNLink("test", actionType: .justRun({
+                            print("test")
+                        }))
                     }
                 }
             }

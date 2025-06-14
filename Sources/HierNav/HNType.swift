@@ -12,4 +12,5 @@ public enum HNType {
     case push
     case present
     case popover
+    case justRun(()->Void)
 }
