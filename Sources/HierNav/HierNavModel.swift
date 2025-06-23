@@ -55,7 +55,7 @@ public class HierNavModel: ObservableObject {
     func poppedView(cnt:Int = 1) {
         views.removeLast(cnt)
     }
-    func popView(cnt:Int = 1) {
+    public func popView(cnt:Int = 1) {
         views.removeLast(cnt)
         let content = views.last ?? EmptyView().toAnyView
         let idx = min(views.count, currentColumnCount-1)
