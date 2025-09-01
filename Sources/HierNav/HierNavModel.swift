@@ -16,20 +16,20 @@ public class HierNavModel: ObservableObject {
     @Published var currentColumnCount: Int = 0
     var views: [AnyView]
     @Published var viewStreams: [CurrentValueSubject<[AnyView], Never>] = .init()
-    init(style: HierNavViewStyle, root: AnyView) {
+    public init(style: HierNavViewStyle, root: AnyView) {
         self.style = style
         views = [root]
         updateViewWidth(1, sizeClass: nil)
     }
-    func getView(index:Int) -> AnyView? {
+    public func getView(index:Int) -> AnyView? {
         guard views.count > index else { return nil }
         return views[index]
     }
-    func getViews(range:PartialRangeFrom<Int>) -> [AnyView] {
+    public func getViews(range:PartialRangeFrom<Int>) -> [AnyView] {
         guard views.count > range.lowerBound else { return [] }
         return Array(views[range])
     }
-    func updateViewWidth(_ width: CGFloat, sizeClass: UserInterfaceSizeClass?) {
+    public func updateViewWidth(_ width: CGFloat, sizeClass: UserInterfaceSizeClass?) {
         DispatchQueue.main.async { [self] in
             self.viewWidth = width
             let cnt: Int
@@ -52,7 +52,7 @@ public class HierNavModel: ObservableObject {
             self.currentColumnCount = cnt
         }
     }
-    func poppedView(cnt:Int = 1) {
+    public func poppedView(cnt:Int = 1) {
         views.removeLast(cnt)
     }
     public func popView(cnt:Int = 1) {
@@ -71,7 +71,7 @@ public class HierNavModel: ObservableObject {
             break
         }
     }
-    func addView(view: AnyView, at index: Int) {
+    public func addView(view: AnyView, at index: Int) {
         guard index <= currentColumnCount else {
             print("⚠️ addView 실패: 유효하지 않은 컬럼 인덱스 \(index)")
             return
@@ -88,7 +88,7 @@ public class HierNavModel: ObservableObject {
             }
         }
     }
-    func addView(view:some View) {
+    public func addView(view:some View) {
         let content = view.toAnyView
         views.append(content)
         let idx = min(views.count, currentColumnCount-1)
